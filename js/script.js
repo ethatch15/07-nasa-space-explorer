@@ -20,6 +20,49 @@ function buildUrl(startDate, endDate) {
   return `https://api.nasa.gov/planetary/apod?api_key=${API_KEY}&start_date=${startDate}&end_date=${endDate}`;
 }
 
+// Find the modal and the parts inside it
+const modal = document.getElementById('modal');
+const modalImage = document.getElementById('modalImage');
+const modalTitle = document.getElementById('modalTitle');
+const modalDate = document.getElementById('modalDate');
+const modalExplanation = document.getElementById('modalExplanation');
+const modalClose = document.getElementById('modalClose');
+
+// Fill the modal with one item's details and show it
+function openModal(item) {
+  modalImage.src = item.hdurl || item.url;
+  modalImage.alt = item.title;
+  modalTitle.textContent = item.title;
+  modalDate.textContent = item.date;
+  modalExplanation.textContent = item.explanation;
+
+  modal.classList.remove('hidden');
+  document.body.classList.add('modal-open');
+}
+
+// Hide the modal
+function closeModal() {
+  modal.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+}
+
+// Close the modal with the X button
+modalClose.addEventListener('click', closeModal);
+
+// Close the modal when clicking the dark area outside the white box
+modal.addEventListener('click', (event) => {
+  if (event.target === modal) {
+    closeModal();
+  }
+});
+
+// Close the modal with the Escape key
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') {
+    closeModal();
+  }
+});
+
 // Show a card for each image NASA sends back
 function showGallery(items) {
   // Clear out the placeholder or any old images
@@ -42,6 +85,11 @@ function showGallery(items) {
       <p><strong>${item.title}</strong></p>
       <p>${item.date}</p>
     `;
+
+    // Open the modal with this item's details when the card is clicked
+    card.addEventListener('click', () => {
+      openModal(item);
+    });
 
     gallery.appendChild(card);
   });
