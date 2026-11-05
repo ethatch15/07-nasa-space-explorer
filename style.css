@@ -179,6 +179,43 @@ button:hover {
   color: var(--nasa-blue-darker);
 }
 
+/* Play icon shown on video cards that have no thumbnail */
+.video-placeholder {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 64px;
+  color: var(--white);
+  background-color: var(--nasa-blue-darkest);
+  border-radius: 4px;
+}
+
+/* "Watch video" link styled like a NASA red button */
+.video-link {
+  display: inline-block;
+  align-self: flex-start;
+  margin: 10px 5px 5px;
+  padding: 8px 14px;
+  background-color: var(--nasa-red);
+  color: var(--white);
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.video-link:hover {
+  background-color: var(--nasa-red-dark);
+}
+
+/* Video player inside the modal, kept at a 16:9 shape */
+.modal-content iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: none;
+  border-radius: 4px;
+}
+
 /* Placeholder content */
 .placeholder {
   flex: 1 1 100%;

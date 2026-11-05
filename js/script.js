@@ -17,12 +17,18 @@ const gallery = document.getElementById('gallery');
 
 // Build the APOD URL using the start and end dates the user picked
 function buildUrl(startDate, endDate) {
-  return `https://api.nasa.gov/planetary/apod?api_key=${API_KEY}&start_date=${startDate}&end_date=${endDate}`;
+  // thumbs=true asks NASA for a preview image (thumbnail_url) for video entries
+  return `https://api.nasa.gov/planetary/apod?api_key=${API_KEY}&start_date=${startDate}&end_date=${endDate}&thumbs=true`;
+}
+
+// Check if a video link can be played inside our page (YouTube or Vimeo embeds)
+function isEmbeddable(url) {
+  return url.includes('youtube.com/embed') || url.includes('player.vimeo.com');
 }
 
 // Find the modal and the parts inside it
 const modal = document.getElementById('modal');
-const modalImage = document.getElementById('modalImage');
+const modalMedia = document.getElementById('modalMedia');
 const modalTitle = document.getElementById('modalTitle');
 const modalDate = document.getElementById('modalDate');
 const modalExplanation = document.getElementById('modalExplanation');
@@ -30,8 +36,20 @@ const modalClose = document.getElementById('modalClose');
 
 // Fill the modal with one item's details and show it
 function openModal(item) {
-  modalImage.src = item.hdurl || item.url;
-  modalImage.alt = item.title;
+  if (item.media_type === 'video') {
+    // Videos: play it right in the modal if we can, and always give a link
+    const player = isEmbeddable(item.url)
+      ? `<iframe src="${item.url}" title="${item.title}" allowfullscreen></iframe>`
+      : '';
+    modalMedia.innerHTML = `
+      ${player}
+      <a class="video-link" href="${item.url}" target="_blank" rel="noopener">▶ Watch video</a>
+    `;
+  } else {
+    // Images: show the HD version if there is one
+    modalMedia.innerHTML = `<img src="${item.hdurl || item.url}" alt="${item.title}" />`;
+  }
+
   modalTitle.textContent = item.title;
   modalDate.textContent = item.date;
   modalExplanation.textContent = item.explanation;
@@ -44,6 +62,9 @@ function openModal(item) {
 function closeModal() {
   modal.classList.add('hidden');
   document.body.classList.remove('modal-open');
+
+  // Clear the media so a video stops playing when the modal closes
+  modalMedia.innerHTML = '';
 }
 
 // Close the modal with the X button
@@ -63,31 +84,45 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
-// Show a card for each image NASA sends back
+// Show a card for each image or video NASA sends back
 function showGallery(items) {
   // Clear out the placeholder or any old images
   gallery.innerHTML = '';
 
   items.forEach((item) => {
-    // Some days are videos instead of images, so we skip those for now
-    if (item.media_type !== 'image') {
-      return;
-    }
-
-    // Use the HD image if there is one, otherwise use the regular one
-    const imageUrl = item.hdurl || item.url;
-
-    // Create a card and fill it with the image, title, and date
+    // Create a card to hold this entry
     const card = document.createElement('div');
     card.className = 'gallery-item';
-    card.innerHTML = `
-      <img src="${imageUrl}" alt="${item.title}" />
-      <p><strong>${item.title}</strong></p>
-      <p>${item.date}</p>
-    `;
+
+    if (item.media_type === 'video') {
+      // Videos: show the thumbnail if NASA sent one, otherwise a play icon
+      const preview = item.thumbnail_url
+        ? `<img src="${item.thumbnail_url}" alt="${item.title}" />`
+        : `<div class="video-placeholder">▶</div>`;
+
+      card.innerHTML = `
+        ${preview}
+        <p><strong>${item.title}</strong></p>
+        <p>${item.date} · 🎬 Video</p>
+        <a class="video-link" href="${item.url}" target="_blank" rel="noopener">▶ Watch video</a>
+      `;
+    } else {
+      // Images: use the HD image if there is one, otherwise the regular one
+      const imageUrl = item.hdurl || item.url;
+
+      card.innerHTML = `
+        <img src="${imageUrl}" alt="${item.title}" />
+        <p><strong>${item.title}</strong></p>
+        <p>${item.date}</p>
+      `;
+    }
 
     // Open the modal with this item's details when the card is clicked
-    card.addEventListener('click', () => {
+    card.addEventListener('click', (event) => {
+      // Let the "Watch video" link open on its own without opening the modal
+      if (event.target.closest('a')) {
+        return;
+      }
       openModal(item);
     });
 
