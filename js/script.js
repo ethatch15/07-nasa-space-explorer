@@ -120,8 +120,9 @@ function showGallery(items) {
         ? `<img src="${item.thumbnail_url}" alt="${item.title}" />`
         : `<div class="video-placeholder">▶</div>`;
 
+      // The card-image frame keeps the hover zoom inside the picture area
       card.innerHTML = `
-        ${preview}
+        <div class="card-image">${preview}</div>
         <p><strong>${item.title}</strong></p>
         <p>${item.date} · 🎬 Video</p>
         <a class="video-link" href="${item.url}" target="_blank" rel="noopener">▶ Watch video</a>
@@ -130,8 +131,11 @@ function showGallery(items) {
       // Images: use the HD image if there is one, otherwise the regular one
       const imageUrl = item.hdurl || item.url;
 
+      // The card-image frame keeps the hover zoom inside the picture area
       card.innerHTML = `
-        <img src="${imageUrl}" alt="${item.title}" />
+        <div class="card-image">
+          <img src="${imageUrl}" alt="${item.title}" />
+        </div>
         <p><strong>${item.title}</strong></p>
         <p>${item.date}</p>
       `;
