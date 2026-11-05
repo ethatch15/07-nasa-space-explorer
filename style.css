@@ -121,6 +121,28 @@ button:hover {
   }
 }
 
+/* "Did You Know?" fact box */
+.space-fact {
+  background-color: var(--white);
+  border-left: 5px solid var(--nasa-red);
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  padding: 15px 20px;
+  margin: 0 20px 10px;
+}
+
+.space-fact h2 {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  color: var(--nasa-blue-darker);
+  margin-bottom: 6px;
+}
+
+.space-fact p {
+  font-size: 17px;
+  line-height: 1.5;
+}
+
 /* Gallery flex container */
 .gallery {
   display: flex;

@@ -11,6 +11,26 @@ const API_KEY = 'Tzwq6NDDkQmPPgwFrmnJLpTHfT977NWDkNWjWPgd';
 
 // API key used for NASA API requests
 
+// A list of fun space facts for the "Did You Know?" section
+const spaceFacts = [
+  'A day on Venus is longer than its year. Venus takes 243 Earth days to spin once, but only 225 to orbit the Sun.',
+  'Light from the Sun takes about 8 minutes and 20 seconds to reach Earth.',
+  'Olympus Mons on Mars is the tallest volcano in the solar system, about 2.5 times taller than Mount Everest.',
+  'Saturn is so light for its size that it would float in water, if you could find a bathtub big enough.',
+  'The International Space Station circles Earth about every 90 minutes, so astronauts see around 16 sunrises a day.',
+  'Jupiter\'s Great Red Spot is a giant storm that is wider than the entire Earth.',
+  'About 1.3 million Earths could fit inside the Sun.',
+  'Space is completely silent because there is no air to carry sound waves.',
+  'A year on Mercury is just 88 Earth days long.',
+  'Neutron stars can spin hundreds of times every second.',
+  'The Andromeda Galaxy is about 2.5 million light-years away, yet you can see it without a telescope on a dark night.',
+  'The footprints left by Apollo astronauts on the Moon could last for millions of years because there is no wind to blow them away.'
+];
+
+// Pick one fact at random and show it on the page
+const randomIndex = Math.floor(Math.random() * spaceFacts.length);
+document.getElementById('spaceFact').textContent = spaceFacts[randomIndex];
+
 // Find the button and the gallery on the page
 const button = document.querySelector('.filters button');
 const gallery = document.getElementById('gallery');
